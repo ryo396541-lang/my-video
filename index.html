@@ -1,1 +1,53 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b0c10"><title>My Video</title><style>*{box-sizing:border-box}body{margin:0;background:#0b0c10;color:#f5f5f7;font-family:system-ui,-apple-system,'Noto Sans JP',sans-serif}main{max-width:1050px;margin:0 auto;padding:22px 14px 60px}header{display:flex;align-items:center;gap:10px;margin:4px 0 22px;font-weight:750;letter-spacing:.3px}header i{display:grid;place-items:center;background:#fff;color:#111;border-radius:9px;width:33px;height:30px;font-style:normal}h1{font-size:clamp(19px,4vw,27px);margin:20px 0 6px}.sub{color:#969aa7;font-size:13px;margin:0 0 22px}.screen{position:relative;background:#000;aspect-ratio:16/9;border-radius:13px;overflow:hidden;display:grid;place-items:center;border:1px solid #24252a}video{width:100%;height:100%;display:none;background:#000}.screen.loaded video{display:block}.empty{text-align:center;color:#b8bac3;padding:20px}.empty .symbol{font-size:54px;display:block;margin-bottom:10px;color:white}.panel{border:1px solid #282a32;background:#15161c;border-radius:14px;padding:18px;margin-top:20px}h2{font-size:16px;margin:0 0 12px}p{line-height:1.65}label{display:block;font-size:13px;color:#b6b9c3;margin:14px 0 7px}input[type=url]{width:100%;padding:13px;border:1px solid #40424b;border-radius:9px;background:#0c0d12;color:white;font-size:15px}button,.file{border:0;background:#fff;color:#141414;border-radius:9px;padding:12px 16px;font-weight:700;font-size:14px;cursor:pointer;display:inline-block}.secondary{background:#292c35;color:white}.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}input[type=file]{display:none}.note{font-size:12px;color:#a6a9b5}.status{font-size:13px;color:#d0d2d9;min-height:20px;margin-top:12px;overflow-wrap:anywhere}.warning{border-left:3px solid #a0a5b5;padding-left:12px;color:#b8bbc5;font-size:13px;margin-top:18px}footer{color:#777d8b;font-size:12px;margin-top:28px;text-align:center}</style></head><body><main><header><i>▶</i> MY VIDEO</header><section class="screen" id="screen"><div class="empty" id="empty"><span class="symbol">▷</span>ここに動画が表示されます</div><video id="player" controls playsinline preload="metadata"></video></section><h1>動画プレイヤー</h1><p class="sub">シンプルな動画視聴ページ</p><section class="panel"><h2>動画をセットする</h2><p class="note">まずはスマホ内の動画を選んで再生テストできるよ。これは自分の端末だけでの再生で、動画はアップロードされません。</p><div class="actions"><label class="file" for="file" style="margin:0;color:#111">スマホから動画を選ぶ</label><input id="file" type="file" accept="video/*"></div><label for="url">または、直接再生できる動画URLを入力</label><input id="url" type="url" placeholder="https://example.com/video.mp4"><div class="actions"><button id="load">URLから再生</button><button id="clear" class="secondary">リセット</button></div><div class="status" id="status" aria-live="polite"></div><p class="warning">ギガファイル便の共有ページURLなどは、そのまま動画URLとして再生できない場合があります。11GBの動画をほかの人にも見せるには、動画を配信できる保存先とサイト公開が別途必要です。元ファイルを再圧縮する処理は行いません。</p></section><footer>MY VIDEO · Private viewing concept</footer></main><script>const player=document.getElementById('player'),screen=document.getElementById('screen'),empty=document.getElementById('empty'),status=document.getElementById('status'),url=document.getElementById('url');let objectUrl=null;function setVideo(src,message){player.pause();player.src=src;screen.classList.add('loaded');empty.hidden=true;player.load();status.textContent=message;}function clear(){player.pause();player.removeAttribute('src');player.load();if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}screen.classList.remove('loaded');empty.hidden=false;status.textContent='';}document.getElementById('file').addEventListener('change',e=>{const f=e.target.files?.[0];if(!f)return;clear();objectUrl=URL.createObjectURL(f);setVideo(objectUrl,'選択した動画: '+f.name+'（この端末だけで再生）');});document.getElementById('load').addEventListener('click',()=>{const value=url.value.trim();if(!/^https?:\/\//i.test(value)){status.textContent='https:// で始まる動画のURLを入力してね。';return;}clear();setVideo(value,'動画を読み込んでいます。再生できない場合はURL・配信設定・動画形式を確認してください。');});document.getElementById('clear').addEventListener('click',clear);player.addEventListener('error',()=>{if(player.src)status.textContent='この動画を読み込めませんでした。共有ページではなく動画ファイルの直接URLが必要です。';});</script></body></html>
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Video</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #101014;
+      color: white;
+      font-family: sans-serif;
+    }
+    header {
+      padding: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+    }
+    main {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 12px;
+    }
+    video {
+      width: 100%;
+      background: black;
+      border-radius: 12px;
+    }
+    p {
+      color: #aaa;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>My Video</header>
+
+  <main>
+    <video
+      controls
+      playsinline
+      preload="metadata"
+      src="https://share.deepstorage.dev/d4513fbb267027fe20c66610aa432ee7/setsuna_natural_timing.mp4">
+    </video>
+
+    <p>再生ボタンを押してね</p>
+  </main>
+</body>
+</html>
